@@ -5,11 +5,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="style.css" />
 		<title>Todo App</title>
-		<script type="module" src="app.js"></script>
+		<script type="module" src="app.js" defer></script>
 	</head>
 	<body>
 		<main class="container">
-			<h1 class="heading">Todo App</h1>
+			<div class="heading-container">
+				<h1 class="heading">Todo App</h1>
+				<p id="todo-count">0</p>
+			</div>
 			<form id="todo-form">
 				<div class="input-wrapper">
 					<input
@@ -25,6 +28,7 @@
 			</form>
 
 			<ul class="todo-list" id="todo-list"></ul>
+			<p class="todo-message"></p>
 		</main>
 	</body>
 </html>

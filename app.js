@@ -1,18 +1,29 @@
+import { createSignal, createEffect } from './signal.js';
+
 const form = document.querySelector('#todo-form');
 const todoList = document.querySelector('#todo-list');
+const count = document.querySelector('#todo-count');
+const todoMessage = document.querySelector('.todo-message');
 
-let todos = getSavedTodos() || [];
+const todos = createSignal(getSavedTodos() || []);
 
 function getSavedTodos() {
 	return JSON.parse(localStorage.getItem('todos'));
 }
+
 function cacheTodos(todos) {
 	localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-for (let todo of todos) {
+for (let todo of todos.value) {
 	todoList.appendChild(CreateTodoItem(todo));
 }
+
+createEffect(() => {
+	cacheTodos(todos.value);
+	count.textContent = todos.value.length;
+	todoMessage.textContent = todos.value.length === 0 ? 'No todos found.' : '';
+});
 
 function CreateDeleteButton(id) {
 	const button = document.createElement('button');
@@ -25,6 +36,7 @@ function CreateDeleteButton(id) {
 	});
 	return button;
 }
+
 function CreateTodoItem(newTodo) {
 	const li = document.createElement('li');
 	li.textContent = newTodo.todo;
@@ -36,14 +48,12 @@ function CreateTodoItem(newTodo) {
 
 function addTodo(todo) {
 	const newTodo = { id: new Date().getTime(), todo };
-	todos.push(newTodo);
-	cacheTodos(todos);
+	todos.value = [...todos.value, newTodo];
 	todoList.appendChild(CreateTodoItem(newTodo));
 }
 
 function deleteTodo(id) {
-	todos = todos.filter((todo) => todo.id !== Number(id));
-	cacheTodos(todos);
+	todos.value = todos.value.filter((todo) => todo.id !== Number(id));
 }
 
 function handleSubmit(e) {
